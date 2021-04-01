@@ -172,8 +172,45 @@ pascal_sbd_dataset = dataset_base.copy({
     'class_names': PASCAL_CLASSES,
 })
 
+# cig_butts_dataset = dataset_base.copy({
+  # 'name': 'Immersive Limit - Cigarette Butts',
+  # 'train_info': '<path to dataset>/cig_butts/train/coco_annotations.json',
+  # 'train_images': '<path to dataset>/cig_butts/train/images/',
+  # 'valid_info': '<path to dataset>/cig_butts/val/coco_annotations.json',
+  # 'valid_images': '<path to dataset>/cig_butts/val/images/',
+  # 'class_names': ('cig_butt'),
+  # 'label_map': { 1:  1 }
+# })
 
+cig_butts_dataset = dataset_base.copy({
+   'name': 'Immersive Limit - Cigarette Butts',
+   'train_info': '/content/cig_butts/train/coco_annotations.json',
+   'train_images': '/content/cig_butts/train/images',
+   'valid_info': '/content/cig_butts/val/coco_annotations.json',
+   'valid_images': '/content/cig_butts/val/images/',
+   'class_names': ('cig_butt'),
+   'label_map': { 1:  1 }
+})
 
+tomato_rob2pheno = dataset_base.copy({
+  'name': 'Rob2Pheno Tomato dataset',
+  'train_info': '/content/Rob2Pheno_Annotated_Tomato_Image_dataset/train_1class.JSON',
+  'train_images': '/content/Rob2Pheno_Annotated_Tomato_Image_dataset/RGB/',
+  'valid_info': '/content/Rob2Pheno_Annotated_Tomato_Image_dataset/val_1class.JSON',
+  'valid_images': '/content/Rob2Pheno_Annotated_Tomato_Image_dataset/RGB/',
+  'class_names': ('tomato'),
+  'label_map': { 1:  1 }
+})
+
+tomato_rob2pheno2 = dataset_base.copy({
+  'name': 'Rob2Pheno Tomato dataset',
+  'train_info': '/content/Rob2Pheno_Annotated_Tomato_Image_dataset/train_1class.JSON',
+  'train_images': '/content/Rob2Pheno_Annotated_Tomato_Image_dataset/RGB/',
+  'valid_info': '/content/Rob2Pheno_Annotated_Tomato_Image_dataset/val_1class.JSON',
+  'valid_images': '/content/Rob2Pheno_Annotated_Tomato_Image_dataset/RGB/',
+  'class_names': ('tomato'),
+  'label_map': { 1:  1 }
+})
 
 
 # ----------------------- TRANSFORMS ----------------------- #
@@ -767,6 +804,47 @@ yolact_resnet50_pascal_config = yolact_resnet50_config.copy({
     })
 })
 
+# yolact_resnet50_cig_butts_config = yolact_resnet50_config.copy({
+#     'name': 'yolact_plus_resnet50_cig_butts',
+#     # Dataset stuff
+#     'dataset': cig_butts_dataset,
+#     'num_classes': len(cig_butts_dataset.class_names) + 1,
+
+#     # Image Size
+#     'max_size': 512,
+# })
+
+yolact_resnet50_cig_butts_config = yolact_resnet50_config.copy({
+    'name': 'yolact_plus_resnet50_cig_butts',
+    # Dataset stuff
+    'dataset': cig_butts_dataset,
+    'num_classes': len(cig_butts_dataset.class_names) + 1,
+
+    # Image Size
+    'max_size': 512,
+})
+
+yolact_resnet50_tomato_config = yolact_resnet50_config.copy({
+    'name': 'yolact_resnet50_tomato',
+    
+    # Dataset stuff
+    'dataset': tomato_rob2pheno,
+    'num_classes': len(tomato_rob2pheno.class_names) + 1,
+
+    # Image Size
+    'max_size': 512,
+})
+
+yolact_resnet50_tomato2_config = yolact_resnet50_config.copy({
+    'name': 'yolact_resnet50_tomato2',
+    # Dataset stuff
+    'dataset': tomato_rob2pheno2,
+    'num_classes': len(tomato_rob2pheno2.class_names) + 1,
+
+    # Image Size
+    'max_size': 512,
+})
+
 # ----------------------- YOLACT++ CONFIGS ----------------------- #
 
 yolact_plus_base_config = yolact_base_config.copy({
@@ -805,6 +883,23 @@ yolact_plus_resnet50_config = yolact_plus_base_config.copy({
     }),
 })
 
+yolact_plus_resnet50_tomato_config = yolact_plus_resnet50_config.copy({
+    'name': 'yolact_plus_resnet50_tomato',
+    
+    #Dataset
+    'dataset': tomato_rob2pheno,
+    'num_classes': len(tomato_rob2pheno.class_names) + 1,
+    
+    'backbone': resnet50_dcnv2_backbone.copy({
+        'selected_layers': list(range(1, 4)),
+        
+        'pred_aspect_ratios': [ [[1, 1/2, 2]] ]*5,
+        'pred_scales': [[i * 2 ** (j / 3.0) for j in range(3)] for i in [24, 48, 96, 192, 384]],
+        'use_pixel_scales': True,
+        'preapply_sqrt': False,
+        'use_square_anchors': False,
+    }),
+})
 
 # Default config
 cfg = yolact_base_config.copy()
